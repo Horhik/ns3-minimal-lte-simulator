@@ -42,7 +42,8 @@ dl_throughput_per_user = dl.groupby('IMSI')['Throughput_DL'].mean().reset_index(
 ul_throughput_per_user = ul.groupby('IMSI')['Throughput_UL'].mean().reset_index()
 
 
-# Вывод результата на экран
+# Printing results
+print("\n\nFinal result! \n\n")
 print("DL Throughput per user (Mbps):")
 print(dl_throughput_per_user)
 

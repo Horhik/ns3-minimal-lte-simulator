@@ -1,14 +1,13 @@
-
 #include <utility>
-#include "ns3/core-module.h"
-#include "ns3/network-module.h"
-#include "ns3/mobility-module.h"
-#include "ns3/lte-module.h"
-#include "ns3/internet-module.h"
-#include "ns3/point-to-point-helper.h"
-#include "ns3/ipv4-global-routing-helper.h"
-#include "ns3/udp-client-server-helper.h"
-#include "ns3/pf-ff-mac-scheduler.h"
+#include <ns3/core-module.h>
+#include <ns3/network-module.h>
+#include <ns3/mobility-module.h>
+#include <ns3/lte-module.h>
+#include <ns3/internet-module.h>
+#include <ns3/point-to-point-helper.h>
+#include <ns3/ipv4-global-routing-helper.h>
+#include <ns3/udp-client-server-helper.h>
+//#include <ns3/pf-ff-mac-scheduler.h>
 
 using namespace ns3;
 
@@ -144,7 +143,6 @@ void setCoords(NodeContainer nodes,
     uint32_t i;
     for(i=0; i < coordsCount; i++){
         Pos pos = coords -> at(i);
-        std::cout << "Coords: " << pos.first << " " << pos.second << std::endl;
         Ptr<Node> node = nodes.Get(i);
         node -> GetObject<MobilityModel>()->SetPosition(Vector(pos.first, pos.second, 0.0));
     }
@@ -170,12 +168,18 @@ void setUpMobility(MobilityHelper * mobility,
 
 }
 
+NS_LOG_COMPONENT_DEFINE ("MinimalLte");
+
 int main(int argc, char *argv[])
 {
+    LogComponentEnable ("MinimalLte", LOG_LEVEL_INFO);
+    LogComponentEnable ("LteHelper", LOG_LEVEL_DEBUG);
+
 
     double simulationTime = 10.0; // 10s
     int maxPackets = 0; // means infinity
     int packetSize  = 1024; // 1 KB
+
 
     CommandLine cmd;
     cmd.AddValue ("simulationTime", "Total duration of the simulation in seconds", simulationTime);
