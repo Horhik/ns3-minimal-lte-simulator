@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-echo "Running Simulation..."
+echo "INFO: Running Simulation..."
 ./build/bin/minimal-lte
 
-echo "Running Throughput computation..."
+echo "INFO: Running Throughput computation..."
 .venv/bin/python throughput-compute.py
