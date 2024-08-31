@@ -1,36 +1,54 @@
-cmake_minimum_required(VERSION 3.0)
-project(my_ns3_project)
+# Specify the minimum CMake version
+cmake_minimum_required(VERSION 3.10)
 
-# Specify the C++ standard
+# Set the project name
+project(MinimalLteProject VERSION 1.0 LANGUAGES CXX)
+
+# Set the C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_COMPILER g++)
 
-# Specify the path to the ns-3 installation
-set(NS3_DIR "~/ns3-install")
+# Use environment variables for NS-3 path and version
+# Default to empty if not set
+set(NS3_PATH $ENV{NS3_PATH})
+set(NS3_VERSION $ENV{NS3_VERSION})
 
-# Set up the include directories
-include_directories(${NS3_DIR}/include)
+# Check if NS3_PATH and NS3_VERSION are set
+if(NOT NS3_PATH)
+    message(FATAL_ERROR "NS3_PATH environment variable is not set.")
+endif()
 
-# Link against ns-3 libraries
-link_directories(${NS3_DIR}/lib)
+if(NOT NS3_VERSION)
+    message(FATAL_ERROR "NS3_VERSION environment variable is not set.")
+endif()
 
-# Add your source files here
-set(SOURCE_FILES minimal-lte.cc)
+# Include the directory with NS-3 headers
+include_directories(${NS3_PATH}/build/include)
 
-# Create an executable
-add_executable(my_ns3_app ${SOURCE_FILES})
+# Create a directory for the executable
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Link the ns-3 libraries
-include_directories(${NS3_DIR}/include/ns3)
-target_link_libraries(my_ns3_app
-    ns3-core
-    ns3-network
-    ns3-mobility
-    ns3-lte
-    ns3-internet
-    ns3-point-to-point
-    ns3-ipv4-global-routing
-    ns3-udp-client-server
-    ns3-pf-ff-mac
+# Add the executable
+add_executable(minimal-lte minimal-lte.cc)
+
+# Link the NS-3 shared libraries
+target_link_libraries(minimal-lte
+    ${NS3_PATH}/build/lib/libns3.${NS3_VERSION}-core-default.so
+    ${NS3_PATH}/build/lib/libns3.${NS3_VERSION}-network-default.so
+    ${NS3_PATH}/build/lib/libns3.${NS3_VERSION}-internet-default.so
+    ${NS3_PATH}/build/lib/libns3.${NS3_VERSION}-applications-default.so
+    ${NS3_PATH}/build/lib/libns3.${NS3_VERSION}-point-to-point-default.so
+    ${NS3_PATH}/build/lib/libns3.${NS3_VERSION}-mobility-default.so
+    ${NS3_PATH}/build/lib/libns3.${NS3_VERSION}-lte-default.so
+)
+
+# Add rpath to find libraries at runtime
+set_target_properties(minimal-lte PROPERTIES
+    INSTALL_RPATH ${NS3_PATH}/build/lib
+    INSTALL_RPATH_USE_LINK_PATH TRUE
+)
+
+# Set the output directory for the executable
+set_target_properties(minimal-lte PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
