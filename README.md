@@ -14,10 +14,19 @@
 
 Решение находится в файле `minimal-lte.cc`
 
-Что бы собрать и запустить симуляцию, можно воспользоватся скриптом `compute.sh`
+Что бы собрать и запустить симуляцию, можно воспользоватся скриптами `build.sh` и `run.sh`
 
-```sh
-bash compute.sh /your/path/to/ns-3/folder
+Скрипту нужно указать путь до папки с ns3 и версию, что бы библиотеки корректно слинковались
+
+Например:
+
+``` sh
+NS3_VERSION=42
+NS3_PATH=~/.local/ns-allinone-3.42/ns-3.42
+
+bash build.sh $NS3_VERSION $NS3_PATH
+bash run.sh
+
 ```
 
 Ключевые характеристики будут находится в файлах: `DlMacStats.txt`,  `DlRlcStats.txt`,  `UlMacStats.txt`,  `UlRlcStats.txt`
@@ -55,3 +64,10 @@ UL Throughput per user (Mbps):
 1     2       8.693986
 
 ```
+
+## Установка ns3
+
+Установку build system ns3 можно произвести запустив скрипт `instll-ns3.sh`
+
+Это может занять довольно длительное время
+
